@@ -1,49 +1,35 @@
 from optimize_finding import Container, process
-from copy import deepcopy
-
-
-class StackableType:
-    __box_types = {}
-    __stackable_types = {}
-
-    @staticmethod
-    def register_box_type(type_id, properties):
-        StackableType.__box_types[type_id] = properties
-
-    @staticmethod
-    def register_stackable_type(type_id, patterns):
-        StackableType.__stackable_types[type_id] = patterns
-
-    @staticmethod
-    def get_box_type(type_id):
-        return StackableType.__box_types.get(type_id, None)
-
-    @staticmethod
-    def get_stackable_type(type_id):
-        if type_id in StackableType.__stackable_types:
-            stackable_type = deepcopy(StackableType.__stackable_types.get(type_id))
-            for i in range(len(stackable_type)):
-                if StackableType.get_stackable_type(stackable_type[i]):
-                    stackable_type[i] = StackableType.get_stackable_type(stackable_type[i])
-            return stackable_type
-        return None
 
 
 def main():
-    input_data = {
-        'Box_Type_A': 4,
-        'Box_Type_B': 2
+    input_boxes = {
+        'HU': 2,
+        'U': 3,
+        'MU': 0
     }
-    Container.stackable_types = [
-        [['Box_Type_A', 'Box_Type_A'], ['Box_Type_B']]
-    ]
-    process(input_data)
-    # StackableType.register_box_type('Box_Type_A', None)
-    # StackableType.register_box_type('Box_Type_B', None)
-    # StackableType.register_stackable_type('HU', ['Box_Type_A', 'Box_Type_A'])
-    # StackableType.register_stackable_type('U', ['Box_Type_B'])
-    # StackableType.register_stackable_type('Type_A', ['HU', 'U'])
-    # print(StackableType.get_stackable_type('Type_A'))
+    box_types = {
+        'HU': [76, 112, 109],
+        'U': [76, 112, 73],
+        'MU': [76, 112, 54],
+        '2HUL': [110, 180, 109],
+        '2UL': [110, 180, 73],
+        'WUL01': [1515, 2220, 85],
+        'WUL03': [1515, 2220, 73]
+    }
+    Container.stackable_types = {
+        'Stack_HU': [['HU'], ['HU']],
+        'Stack_U': [['U'], ['U'], ['U']],
+        'Stack_MU': [['MU'], ['MU'], ['MU'], ['MU']],
+        'Stack_2HUL': [['2HUL'], ['2HUL']],
+        'Stack_2UL': [['2UL'], ['2UL'], ['2UL']],
+        'Stack_WUL03': [['WUL03'], ['WUL03'], ['WUL03']],
+        'Mix_1': [['M'], ['M'], ['HU']],
+        'Mix_5': [['HU', 'HU', 'HU'], ['2HUL']],
+        'Mix_6': [['U', 'U', 'U'], ['U', 'U', 'U'], ['2UL']],
+        'Mix_7': [['WUL01'], ['WUL03'], ['WUL03']],
+        'Mix_8': [['MU', 'MU', 'MU'], ['MU', 'MU', 'MU'], ['2HUL']]
+    }
+    process(input_boxes)
 
 
 if __name__ == '__main__':

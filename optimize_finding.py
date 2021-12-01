@@ -1,12 +1,13 @@
 from copy import deepcopy
 from time import time
+from statistics import mean
 
 
 class Box:
     def __init__(self, box_type, empty=True):
         self.type = box_type
         self.empty = empty
-        self.previous_box = None
+        self.volume = [10, 10, 10]
 
     def __str__(self):
         return self.id
@@ -19,39 +20,35 @@ class BoxStack:
     def __init__(self):
         self.inside = []
         self.available_box_types = {}
+        self.stackable_type = None
         self.pattern = []
 
     def __repr__(self):
-        return '{0}'.format([['' if y.empty else y.type for y in x] for x in self.inside])
+        # return '{0}'.format([['' if y.empty else y.type for y in x] for x in self.inside])
+        return '({0}, capacity={1}%)'.format(self.stackable_type, self.capacity * 100)
 
-    def set_pattern(self, pattern):
+    def set_pattern(self, stackable_type):
+        self.stackable_type = stackable_type
         self.inside.clear()
         self.available_box_types.clear()
-        self.pattern = pattern
-        for row in pattern:
+        self.pattern = Container.stackable_types[stackable_type]
+        for row in self.pattern:
             data = []
-            previous_box = None
             for box_type in row:
                 box = Box(box_type)
-                box.previous_box = previous_box
                 if box_type in self.available_box_types:
                     self.available_box_types[box_type].append(box)
                 else:
                     self.available_box_types[box_type] = [box]
                 data.append(box)
-                previous_box = box
             self.inside.append(data)
 
-    def is_valid_for(self, box_type):
-        if box_type in self.available_box_types:
-            available_boxes = self.available_box_types[box_type]
-            selected_box = available_boxes[0]
-            if not selected_box.previous_box or (selected_box.previous_box and not selected_box.previous_box.empty):
-                return True
-        return False
+    @property
+    def capacity(self):
+        return mean([len([y for y in x if not y.empty]) / len(x) for x in self.inside])
 
-    def is_full(self):
-        return min([min([not y.empty for y in x]) for x in self.inside])
+    def is_valid_for(self, box_type):
+        return box_type in self.available_box_types
 
     def add(self, box_type):
         if self.is_valid_for(box_type):
@@ -60,8 +57,6 @@ class BoxStack:
             selected_box.empty = False
             if not available_boxes:
                 self.available_box_types.pop(box_type)
-            return True
-        return False
 
 
 class Container:
@@ -76,10 +71,11 @@ class Container:
         return str(self.inside)
 
     def __lt__(self, other):
-        return self.fitness() < other.fitness()
+        return self.fitness < other.fitness
 
+    @property
     def fitness(self):
-        return len(self.inside)
+        return mean([x.capacity for x in self.inside])
 
     def search_possibilities(self, box_type):
         possibilities = []
@@ -90,7 +86,8 @@ class Container:
                 container.inside[i].add(box_type)
                 possibilities.append(container)
         for stackable_type in Container.stackable_types:
-            if box_type in [x[0] for x in stackable_type]:
+            pattern = Container.stackable_types[stackable_type]
+            if box_type in [x[0] for x in pattern]:
                 box_stack = BoxStack()
                 box_stack.set_pattern(stackable_type)
                 box_stack.add(box_type)
@@ -121,6 +118,7 @@ def remove_box(boxes, box_type):
 
 
 def process(boxes):
+    boxes = {box_type: boxes[box_type] for box_type in boxes if boxes[box_type] > 0}
     print('Input:', boxes)
     queue = [Node(boxes, is_root=True)]
     containers = []
@@ -139,8 +137,8 @@ def process(boxes):
             if str(current_node.container) not in seen_containers:
                 seen_containers.add(str(current_node.container))
                 containers.append(current_node.container)
-    max_container = min(containers)
-    best_containers = [x for x in containers if x.fitness() == max_container.fitness()]
+    max_container = max(containers)
+    best_containers = [x for x in containers if x.fitness == max_container.fitness]
     end_timestamp = time()
     print('Possibilities found:', len(containers))
     print('Best Possibilities:')
