@@ -46,7 +46,7 @@ def read_input(file_name):
 def main():
     Box.initialize()
     Stacking.initialize()
-    input_boxes = read_input('input_boxes.txt')
+    input_boxes = read_input('data/input_boxes.txt')
     processor = Processor()
     output_stacking = processor.process(input_boxes)
     print('Input Boxes:', input_boxes)
