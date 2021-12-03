@@ -10,7 +10,7 @@ class Stacking:
     def __init__(self, type_id, stacking_list):
         self.type_id = type_id
         self.__stacking_list = stacking_list
-        self.__volume = self.__calculate_volume()
+        self.__size = self.__calculate_size()
         self.__boxes = self.__count_boxes()
 
     def __repr__(self):
@@ -20,20 +20,20 @@ class Stacking:
         counter = Counter(reduce(lambda a, b: a + b, [reduce(lambda x, y: x + y, z.tolist()) for z in self.__stacking_list]))
         return dict(counter)
 
-    def __calculate_volume(self):
-        volume = np.zeros((3,))
-        volume[0] = sum([Box.get(box_type).width for box_type in self.__stacking_list[0][0]])
-        volume[1] = sum([Box.get(box_type).length for box_type in [x[0] for x in self.__stacking_list[0]]])
-        volume[2] = sum([max([Box.get(box_type).height for box_type in reduce(lambda x, y: x + y, stacking.tolist())]) for stacking in self.__stacking_list])
-        return volume
+    def __calculate_size(self):
+        size = np.zeros((3,))
+        size[0] = sum([Box.get(box_type).width for box_type in self.__stacking_list[0][0]])
+        size[1] = sum([Box.get(box_type).length for box_type in [x[0] for x in self.__stacking_list[0]]])
+        size[2] = sum([max([Box.get(box_type).height for box_type in reduce(lambda x, y: x + y, stacking.tolist())]) for stacking in self.__stacking_list])
+        return size
 
     @property
     def is_same_type(self):
         return len(self.boxes) == 1
 
     @property
-    def volume(self):
-        return self.__volume
+    def size(self):
+        return self.__size
 
     @property
     def boxes(self):
@@ -41,15 +41,15 @@ class Stacking:
 
     @property
     def width(self):
-        return self.volume[0]
+        return self.size[0]
 
     @property
     def length(self):
-        return self.volume[1]
+        return self.size[1]
 
     @property
     def height(self):
-        return self.volume[2]
+        return self.size[2]
 
     @staticmethod
     def register(stacking_types):

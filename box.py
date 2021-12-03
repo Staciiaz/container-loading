@@ -4,24 +4,24 @@ import numpy as np
 class Box:
     box_types = dict()
 
-    def __init__(self, type_id, volume):
+    def __init__(self, type_id, size):
         self.type_id = type_id
-        self.volume = np.array(volume)
+        self.size = np.array(size)
 
     def __repr__(self):
-        return '(type_id={0}, volume={1})'.format(self.type_id, self.volume)
+        return '(type_id={0}, size={1})'.format(self.type_id, self.size)
 
     @property
     def width(self):
-        return self.volume[0]
+        return self.size[0]
 
     @property
     def length(self):
-        return self.volume[1]
+        return self.size[1]
 
     @property
     def height(self):
-        return self.volume[2]
+        return self.size[2]
 
     @staticmethod
     def register(box_types):
