@@ -24,7 +24,7 @@ class Box:
         return self.volume[2]
 
     @staticmethod
-    def create(box_types):
+    def register(box_types):
         for box_type in box_types:
             Box.box_types[box_type] = Box(box_type, box_types[box_type])
 
@@ -34,7 +34,7 @@ class Box:
 
     @staticmethod
     def initialize():
-        Box.create({
+        Box.register({
             '2HUL': [110, 180, 109],
             '2UL': [110, 180, 73],
             'WUL01': [1515, 2220, 85],

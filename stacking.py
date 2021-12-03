@@ -52,7 +52,7 @@ class Stacking:
         return self.volume[2]
 
     @staticmethod
-    def create(stacking_types):
+    def register(stacking_types):
         for stacking_type in stacking_types:
             Stacking.stacking_types[stacking_type] = Stacking(stacking_type, stacking_types[stacking_type])
 
@@ -66,13 +66,7 @@ class Stacking:
 
     @staticmethod
     def initialize():
-        Stacking.create({
-            'Same_HU': [np.full((1, 1), 'HU'), np.full((1, 1), 'HU')],
-            'Same_U': [np.full((1, 1), 'U'), np.full((1, 1), 'U'), np.full((1, 1), 'U')],
-            'Same_MU': [np.full((1, 1), 'MU'), np.full((1, 1), 'MU'), np.full((1, 1), 'MU'), np.full((1, 1), 'MU')],
-            'Same_2HUL': [np.full((1, 1), '2HUL'), np.full((1, 1), '2HUL')],
-            'Same_2UL': [np.full((1, 1), '2UL'), np.full((1, 1), '2UL'), np.full((1, 1), '2UL')],
-            'Same_WUL03': [np.full((1, 1), 'WUL03'), np.full((1, 1), 'WUL03'), np.full((1, 1), 'WUL03')],
+        Stacking.register({
             'Mix_1': [np.full((1, 1), 'MU'), np.full((1, 1), 'MU'), np.full((1, 1), 'HU')],
             'Mix_2': [np.full((2, 1), 'U'), np.full((1, 1), 'H/D+p')],
             'Mix_3': [np.full((2, 1), 'MU'), np.full((1, 1), 'H/D+p')],
@@ -80,5 +74,11 @@ class Stacking:
             'Mix_5': [np.full((1, 3), 'HU'), np.full((1, 1), '2HUL')],
             'Mix_6': [np.full((1, 3), 'U'), np.full((1, 3), 'U'), np.full((1, 1), '2UL')],
             'Mix_7': [np.full((1, 1), 'WUL01'), np.full((1, 1), 'WUL03'), np.full((1, 1), 'WUL03')],
-            'Mix_8': [np.full((1, 3), 'MU'), np.full((1, 3), 'MU'), np.full((1, 1), '2HUL')]
+            'Mix_8': [np.full((1, 3), 'MU'), np.full((1, 3), 'MU'), np.full((1, 1), '2HUL')],
+            'Same_HU': [np.full((1, 1), 'HU'), np.full((1, 1), 'HU')],
+            'Same_U': [np.full((1, 1), 'U'), np.full((1, 1), 'U'), np.full((1, 1), 'U')],
+            'Same_MU': [np.full((1, 1), 'MU'), np.full((1, 1), 'MU'), np.full((1, 1), 'MU'), np.full((1, 1), 'MU')],
+            'Same_2HUL': [np.full((1, 1), '2HUL'), np.full((1, 1), '2HUL')],
+            'Same_2UL': [np.full((1, 1), '2UL'), np.full((1, 1), '2UL'), np.full((1, 1), '2UL')],
+            'Same_WUL03': [np.full((1, 1), 'WUL03'), np.full((1, 1), 'WUL03'), np.full((1, 1), 'WUL03')]
         })
