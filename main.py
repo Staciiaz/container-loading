@@ -1,5 +1,6 @@
 from box import Box
 from stacking import Stacking
+import os
 
 
 class Processor:
@@ -34,10 +35,11 @@ class Processor:
 
 def read_input(file_name):
     boxes = dict()
-    with open(file_name, 'r') as file:
-        for line in file:
-            data = line.replace('\n', '').split(' ')
-            boxes[data[0]] = int(data[1])
+    if os.path.exists(file_name):
+        with open(file_name, 'r') as file:
+            for line in file:
+                data = line.replace('\n', '').split(' ')
+                boxes[data[0]] = int(data[1])
     return boxes
 
 
