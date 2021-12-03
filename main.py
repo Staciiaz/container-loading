@@ -4,6 +4,7 @@ from stacking import Stacking
 
 class Processor:
     def __init__(self):
+        self.__stacking = dict()
         self.__remaining_boxes = dict()
 
     @property
@@ -11,9 +12,10 @@ class Processor:
         return dict(self.__remaining_boxes)
 
     def clear(self):
+        self.__stacking.clear()
         self.__remaining_boxes.clear()
 
-    def remove_remaining_boxes(self, box_type, amount):
+    def remove_boxes(self, box_type, amount):
         self.__remaining_boxes[box_type] -= amount
         if self.__remaining_boxes[box_type] <= 0:
             self.__remaining_boxes.pop(box_type)
@@ -21,12 +23,11 @@ class Processor:
 
     def process(self, boxes):
         self.__remaining_boxes.update(boxes)
-        output_stacking = dict()
         for stacking in Stacking.get_all():
             if min([0 if x not in self.__remaining_boxes else self.__remaining_boxes[x] for x in stacking.boxes]) > 0:
-                output_stacking[stacking.type_id] = min([self.__remaining_boxes[x] // stacking.boxes[x] for x in stacking.boxes])
-                [self.remove_remaining_boxes(x, output_stacking[stacking.type_id] * stacking.boxes[x]) for x in stacking.boxes]
-        return output_stacking
+                self.__stacking[stacking.type_id] = min([self.__remaining_boxes[x] // stacking.boxes[x] for x in stacking.boxes])
+                [self.remove_boxes(x, self.__stacking[stacking.type_id] * stacking.boxes[x]) for x in stacking.boxes]
+        return self.__stacking
 
 
 def main():
@@ -40,7 +41,8 @@ def main():
     processor = Processor()
     output_stacking = processor.process(input_boxes)
     print('Stacking:', output_stacking)
-    print('Remaining boxes:', processor.remaining_boxes)
+    if processor.remaining_boxes:
+        print('Remaining boxes:', processor.remaining_boxes)
 
 
 if __name__ == '__main__':
