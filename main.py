@@ -32,16 +32,22 @@ class Processor:
         return self.__stacking
 
 
+def read_input(file_name):
+    boxes = dict()
+    with open(file_name, 'r') as file:
+        for line in file:
+            data = line.replace('\n', '').split(' ')
+            boxes[data[0]] = int(data[1])
+    return boxes
+
+
 def main():
     Box.initialize()
     Stacking.initialize()
-    input_boxes = {
-        'HU': 22,
-        'U': 30,
-        'MU': 42
-    }
+    input_boxes = read_input('input_boxes.txt')
     processor = Processor()
     output_stacking = processor.process(input_boxes)
+    print('Input Boxes:', input_boxes)
     print('Stacking:', output_stacking)
     if processor.remaining_boxes:
         print('Remaining boxes:', processor.remaining_boxes)
