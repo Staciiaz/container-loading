@@ -51,8 +51,7 @@ def main():
     output_stacking = processor.process(input_boxes)
     print('Input Boxes:', input_boxes)
     print('Stacking:', output_stacking)
-    if processor.remaining_boxes:
-        print('Remaining boxes:', processor.remaining_boxes)
+    print('Remaining boxes:', processor.remaining_boxes)
 
 
 if __name__ == '__main__':
