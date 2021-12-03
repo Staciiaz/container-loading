@@ -1,35 +1,46 @@
-from optimize_finding import Container, process
+from box import Box
+from stacking import Stacking
+
+
+class Processor:
+    def __init__(self):
+        self.__remaining_boxes = dict()
+
+    @property
+    def remaining_boxes(self):
+        return dict(self.__remaining_boxes)
+
+    def clear(self):
+        self.__remaining_boxes.clear()
+
+    def remove_remaining_boxes(self, box_type, amount):
+        self.__remaining_boxes[box_type] -= amount
+        if self.__remaining_boxes[box_type] <= 0:
+            self.__remaining_boxes.pop(box_type)
+        return box_type in self.__remaining_boxes
+
+    def process(self, boxes):
+        self.__remaining_boxes.update(boxes)
+        output_stacking = dict()
+        for stacking in Stacking.get_all():
+            if min([0 if x not in self.__remaining_boxes else self.__remaining_boxes[x] for x in stacking.boxes]) > 0:
+                output_stacking[stacking.type_id] = min([self.__remaining_boxes[x] // stacking.boxes[x] for x in stacking.boxes])
+                [self.remove_remaining_boxes(x, output_stacking[stacking.type_id] * stacking.boxes[x]) for x in stacking.boxes]
+        return output_stacking
 
 
 def main():
+    Box.initialize()
+    Stacking.initialize()
     input_boxes = {
-        'HU': 2,
-        'U': 3,
-        'MU': 0
+        'HU': 21,
+        'U': 30,
+        'MU': 42
     }
-    box_types = {
-        'HU': [76, 112, 109],
-        'U': [76, 112, 73],
-        'MU': [76, 112, 54],
-        '2HUL': [110, 180, 109],
-        '2UL': [110, 180, 73],
-        'WUL01': [1515, 2220, 85],
-        'WUL03': [1515, 2220, 73]
-    }
-    Container.stackable_types = {
-        'Stack_HU': [['HU'], ['HU']],
-        'Stack_U': [['U'], ['U'], ['U']],
-        'Stack_MU': [['MU'], ['MU'], ['MU'], ['MU']],
-        'Stack_2HUL': [['2HUL'], ['2HUL']],
-        'Stack_2UL': [['2UL'], ['2UL'], ['2UL']],
-        'Stack_WUL03': [['WUL03'], ['WUL03'], ['WUL03']],
-        'Mix_1': [['M'], ['M'], ['HU']],
-        'Mix_5': [['HU', 'HU', 'HU'], ['2HUL']],
-        'Mix_6': [['U', 'U', 'U'], ['U', 'U', 'U'], ['2UL']],
-        'Mix_7': [['WUL01'], ['WUL03'], ['WUL03']],
-        'Mix_8': [['MU', 'MU', 'MU'], ['MU', 'MU', 'MU'], ['2HUL']]
-    }
-    process(input_boxes)
+    processor = Processor()
+    output_stacking = processor.process(input_boxes)
+    print('Stacking:', output_stacking)
+    print('Remaining boxes:', processor.remaining_boxes)
 
 
 if __name__ == '__main__':
