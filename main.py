@@ -21,8 +21,12 @@ def main():
     processor = Processor()
     output_stacking = processor.process(input_boxes)
     print('Input Boxes:', input_boxes)
-    print('Stacking:', output_stacking)
-    print('Remaining boxes:', processor.remaining_boxes)
+    # print('Stacking:', output_stacking)
+    # print('Remaining boxes:', processor.remaining_boxes)
+    print('Output Stacking:')
+    for stacking_type, stacking_amount in output_stacking.items():
+        stacking = Stacking.get(stacking_type)
+        print(stacking.type_id, stacking.size, stacking_amount)
 
 
 if __name__ == '__main__':

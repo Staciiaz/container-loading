@@ -10,8 +10,8 @@ class Stacking:
     def __init__(self, type_id, stacking_list):
         self.type_id = type_id
         self.__stacking_list = stacking_list
-        self.__size = self.__calculate_size()
         self.__boxes = self.__count_boxes()
+        self.__size = self.__calculate_size()
 
     def __repr__(self):
         return '(type_id={0}, volume={1})'.format(self.type_id, self.volume)
