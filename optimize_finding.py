@@ -126,6 +126,7 @@ def process(boxes):
     start_timestamp = time()
     print('Processing ...')
     while queue:
+        print('Queue size:', len(queue))
         current_node = queue.pop(0)
         if current_node.children:
             for box_type in current_node.children:
