@@ -24,7 +24,7 @@ def main():
     # print('Stacking:', output_stacking)
     # print('Remaining boxes:', processor.remaining_boxes)
     print('Output Stacking:')
-    for stacking_type, stacking_amount in output_stacking.items():
+    for stacking_type, stacking_amount in sorted(output_stacking.items(), key=lambda x: Stacking.get(x[0]).size[0]):
         stacking = Stacking.get(stacking_type)
         print(stacking.type_id, stacking.size, stacking_amount)
 
