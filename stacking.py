@@ -51,6 +51,10 @@ class Stacking:
     def height(self):
         return self.size[2]
 
+    @property
+    def volume_2d(self):
+        return self.width * self.height
+
     @staticmethod
     def register(stacking_types):
         for stacking_type in stacking_types:

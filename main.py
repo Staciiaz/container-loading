@@ -1,7 +1,7 @@
 from box import Box
 from stacking import Stacking
+from container import Container
 from processor import Processor
-from optimize_finding import Container, process
 import os
 
 
@@ -20,13 +20,15 @@ def main():
     Stacking.initialize()
     input_boxes = read_input('data/input_boxes.txt')
     processor = Processor()
-    output_stacking = processor.process(input_boxes)
+    processor.update(input_boxes)
+    output_stacking = processor.calculate_stacking()
     print('Input Boxes:', input_boxes)
     print('Remaining boxes:', processor.remaining_boxes)
-    print('Output Stacking:')
-    for stacking_type, stacking_amount in sorted(output_stacking.items(), key=lambda x: Stacking.get(x[0]).size[0]):
-        stacking = Stacking.get(stacking_type)
-        print(stacking.type_id, stacking.size, stacking_amount)
+    print('Output Stacking:', output_stacking)
+    containers = processor.calculate_container()
+    print('Container amount:', len(containers))
+    for i, container in enumerate(containers):
+        print('Container', i, '>', 'Used Volume:', container.used_volume / container.volume * 100, '%')
 
 
 if __name__ == '__main__':
