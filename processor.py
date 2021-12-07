@@ -35,11 +35,12 @@ class Processor:
         return self.__stacking
 
     def calculate_container(self):
-        container_volume = 2240 * 2370
+        container_volume = 237 * 1200  # [237 * 1200] container volume in 2d
         containers = [Container(container_volume)]
         for stacking_type, stacking_amount in sorted(self.__stacking.items(),
                                                      key=lambda x: Stacking.get(x[0]).volume_2d, reverse=True):
             stacking = Stacking.get(stacking_type)
+            print(stacking.type_id, stacking.size)
             for _ in range(stacking_amount):
                 best_fit_container = min([x for x in containers if x.available_volume >= stacking.volume_2d],
                                          key=lambda x: x.available_volume, default=None)
