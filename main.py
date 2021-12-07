@@ -28,7 +28,8 @@ def main():
     containers = processor.calculate_container()
     print('Container amount:', len(containers))
     for i, container in enumerate(containers):
-        print('Container', i, '>', 'Used Volume:', container.used_volume / container.volume * 100, '%')
+        # print('Container', i, '>', 'Used Volume:', container.used_volume / container.volume * 100, '%')
+        print('Container', i, '>', container)
 
 
 if __name__ == '__main__':
