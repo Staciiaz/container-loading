@@ -53,7 +53,7 @@ class Stacking:
 
     @property
     def volume_2d(self):
-        return self.width * self.height
+        return self.width * self.length
 
     @staticmethod
     def register(stacking_types):

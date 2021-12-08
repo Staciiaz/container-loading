@@ -1,6 +1,6 @@
 from box import Box
 from stacking import Stacking
-from container import Container
+from container import ContainerSection
 from processor import Processor
 import os
 
@@ -25,11 +25,14 @@ def main():
     output_stacking = processor.calculate_stacking()
     print('Remaining boxes:', processor.remaining_boxes)
     print('Output Stacking:', output_stacking)
+    for stacking_type, stacking_amount in output_stacking.items():
+        stacking = Stacking.get(stacking_type)
+        print(stacking_type, stacking.size)
     containers = processor.calculate_container()
     print('Container amount:', len(containers))
     for i, container in enumerate(containers):
-        # print('Container', i, '>', 'Used Volume:', container.used_volume / container.volume * 100, '%')
-        print('Container', i, '>', container)
+        print('Container', i)
+        print(container)
 
 
 if __name__ == '__main__':
