@@ -34,7 +34,7 @@ class ContainerSection:
         return self.available_volume / self.volume
 
     def is_valid_for(self, stacking):
-        return stacking.width < self.available_volume and (not self.length or self.length == stacking.length)
+        return self.available_volume >= stacking.width and (not self.length or self.length == stacking.length)
 
     def append(self, stacking):
         if self.is_valid_for(stacking):
@@ -45,14 +45,15 @@ class ContainerSection:
 
 
 class Container:
-    def __init__(self, volume):
+    def __init__(self, volume, height_limit):
         self.volume = volume
+        self.height_limit = height_limit
         self.sections = []
         self.used_volume = 0
 
     def __str__(self):
         container_representation = str()
-        container_representation += 'Used Volume: {}%\n'.format(self.used_volume_ratio * 100)
+        container_representation += 'Used Volume: {0} / {1} ({2:.4f}%)\n'.format(self.used_volume, self.volume, self.used_volume_ratio * 100)
         for section in self.sections:
             container_representation += '{}\n'.format(str(section))
         return container_representation
@@ -68,6 +69,9 @@ class Container:
     @property
     def available_volume_ratio(self):
         return self.available_volume / self.volume
+
+    def is_valid_for(self, section):
+        return self.available_volume >= section.length and self.height_limit >= section.height
 
     def append(self, section):
         if section.length < self.available_volume:

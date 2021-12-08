@@ -6,29 +6,28 @@ import os
 
 
 def read_input(file_name):
-    boxes = dict()
+    data_dict = dict()
     if os.path.exists(file_name):
         with open(file_name, 'r') as file:
             for line in file:
                 data = line.replace('\n', '').split(' ')
-                boxes[data[0]] = int(data[1])
-    return boxes
+                data_dict[data[0]] = int(data[1])
+    return data_dict
 
 
 def main():
     Box.initialize()
     Stacking.initialize()
     input_boxes = read_input('data/input_boxes.txt')
+    input_containers = read_input('data/input_containers.txt')
     processor = Processor()
     print('Input Boxes:', input_boxes)
     processor.update(input_boxes)
-    output_stacking = processor.calculate_stacking()
+    stacking_list = processor.calculate_stacking()
     print('Remaining boxes:', processor.remaining_boxes)
-    print('Output Stacking:', output_stacking)
-    for stacking_type, stacking_amount in output_stacking.items():
-        stacking = Stacking.get(stacking_type)
-        print(stacking_type, stacking.size)
+    print('Stacking list:', stacking_list)
     containers = processor.calculate_container()
+    print('Section left:', len(processor.remaining_sections))
     print('Container amount:', len(containers))
     for i, container in enumerate(containers):
         print('Container', i)
