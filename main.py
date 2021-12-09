@@ -22,11 +22,12 @@ def main():
     input_containers = read_input('data/input_containers.txt')
     processor = Processor()
     print('Input Boxes:', input_boxes)
-    remaining_boxes, containers = processor.calculate(input_boxes)
+    remaining_boxes, remaining_sections, containers = processor.calculate(input_boxes, large_container=True)
     print('Remaining boxes:', remaining_boxes)
+    print('Remaining sections:', len(remaining_sections))
     print('Container amount:', len(containers))
     for i, container in enumerate(containers):
-        print(container.representation)
+        print('Container', i, '=>', container.representation)
 
 
 if __name__ == '__main__':
