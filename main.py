@@ -30,8 +30,7 @@ def main():
     print('Section left:', len(processor.remaining_sections))
     print('Container amount:', len(containers))
     for i, container in enumerate(containers):
-        print('Container', i)
-        print(container)
+        print(container.representation)
 
 
 if __name__ == '__main__':

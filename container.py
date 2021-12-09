@@ -52,8 +52,15 @@ class Container:
         self.used_volume = 0
 
     def __str__(self):
+        return '{}'.format(self.sections)
+
+    def __repr__(self):
+        return '(used_volume={}, sections={})'.format(self.used_volume, self.sections)
+
+    @property
+    def representation(self):
         container_representation = str()
-        container_representation += 'Used Volume: {0} / {1} ({2:.4f}%)\n'.format(self.used_volume, self.volume, self.used_volume_ratio * 100)
+        container_representation += 'Used Volume: {} / {} ({:.4f}%)\n'.format(self.used_volume, self.volume, self.used_volume_ratio * 100)
         for section in self.sections:
             container_representation += '{}\n'.format(str(section))
         return container_representation
