@@ -64,9 +64,9 @@ class Processor:
         # Small container volume = [ 237 * 590 * 224 ]
         container_volume = 1200
         height_limit = 240
-        sections = sorted([x for x in self.__sections if x.available_volume_ratio < 0.5], reverse=True)
+        sections = sorted([x for x in self.__sections if x.used_volume_ratio >= 0.9], reverse=True)
         if include_bad_section:
-            bad_sections = sorted([x for x in self.__sections if x.available_volume_ratio >= 0.5], reverse=True)
+            bad_sections = sorted([x for x in self.__sections if x.used_volume_ratio < 0.9], reverse=True)
             sections.extend(bad_sections)
         for section in sections:
             if section.height <= height_limit:

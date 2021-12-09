@@ -26,6 +26,10 @@ class ContainerSection:
         return max([x.height for x in self.stacking_list])
 
     @property
+    def used_volume_ratio(self):
+        return self.used_volume / self.volume
+
+    @property
     def available_volume(self):
         return self.volume - self.used_volume
 
@@ -45,6 +49,8 @@ class ContainerSection:
 
 
 class Container:
+    width = 237
+
     def __init__(self, volume, height_limit):
         self.volume = volume
         self.height_limit = height_limit
@@ -58,9 +64,13 @@ class Container:
         return '(used_volume={}, sections={})'.format(self.used_volume, self.sections)
 
     @property
+    def volume_2d(self):
+        return self.volume * Container.width
+
+    @property
     def representation(self):
         container_representation = str()
-        container_representation += 'Used Volume: {} / {} ({:.4f}%)\n'.format(self.used_volume, self.volume, self.used_volume_ratio * 100)
+        container_representation += 'Used Volume: {:.4f}%\n'.format(self.used_volume_2d_ratio * 100)
         for section in self.sections:
             container_representation += '{}\n'.format(str(section))
         return container_representation
@@ -76,6 +86,14 @@ class Container:
     @property
     def available_volume_ratio(self):
         return self.available_volume / self.volume
+
+    @property
+    def used_volume_2d(self):
+        return self.used_volume * Container.width - sum([x.available_volume * x.length for x in self.sections])
+
+    @property
+    def used_volume_2d_ratio(self):
+        return self.used_volume_2d / self.volume_2d
 
     def is_valid_for(self, section):
         return self.available_volume >= section.length and self.height_limit >= section.height
