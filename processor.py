@@ -12,11 +12,15 @@ class Processor:
 
     @property
     def remaining_boxes(self):
-        return dict(self.__boxes)
+        return self.__boxes
 
     @property
     def remaining_sections(self):
-        return list(self.__sections)
+        return self.__sections
+
+    @property
+    def containers(self):
+        return self.__containers
 
     def update(self, boxes):
         self.__boxes.update(boxes)
@@ -80,3 +84,9 @@ class Processor:
                     self.__containers.append(container)
                 self.__sections.remove(section)
         return self.__containers
+
+    def calculate(self, boxes):
+        self.update(boxes)
+        self.calculate_stacking()
+        self.calculate_container()
+        return self.remaining_boxes, self.containers

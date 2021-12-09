@@ -37,6 +37,16 @@ class ContainerSection:
     def available_volume_ratio(self):
         return self.available_volume / self.volume
 
+    @property
+    def used_boxes(self):
+        used_boxes = dict()
+        for stacking in self.stacking_list:
+            for box_type, box_amount in stacking.boxes.items():
+                if box_type not in used_boxes:
+                    used_boxes[box_type] = 0
+                used_boxes[box_type] += box_amount
+        return used_boxes
+
     def is_valid_for(self, stacking):
         return self.available_volume >= stacking.width and (not self.length or self.length == stacking.length)
 
@@ -70,7 +80,7 @@ class Container:
     @property
     def representation(self):
         container_representation = str()
-        container_representation += 'Used Volume: {:.4f}%\n'.format(self.used_volume_2d_ratio * 100)
+        container_representation += 'Used volume: {:.2f}%, Box used: {}\n'.format(self.used_volume_2d_ratio * 100, self.used_boxes)
         for section in self.sections:
             container_representation += '{}\n'.format(str(section))
         return container_representation
@@ -94,6 +104,16 @@ class Container:
     @property
     def used_volume_2d_ratio(self):
         return self.used_volume_2d / self.volume_2d
+
+    @property
+    def used_boxes(self):
+        used_boxes = dict()
+        for section in self.sections:
+            for box_type, box_amount in section.used_boxes.items():
+                if box_type not in used_boxes:
+                    used_boxes[box_type] = 0
+                used_boxes[box_type] += box_amount
+        return used_boxes
 
     def is_valid_for(self, section):
         return self.available_volume >= section.length and self.height_limit >= section.height
