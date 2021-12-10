@@ -13,6 +13,9 @@ class ContainerSection:
         stacking_list = [x.type_id for x in self.stacking_list]
         return '(used_volume={}, length={}, height={}, stacking_list=[{}])'.format(self.used_volume, self.length, self.height, ' '.join(stacking_list))
 
+    def __len__(self):
+        return len(self.stacking_list)
+
     def __lt__(self, other):
         if len(self.stacking_list) != len(other.stacking_list):
             return len(self.stacking_list) > len(other.stacking_list)
@@ -72,6 +75,9 @@ class Container:
 
     def __repr__(self):
         return '(used_volume={}, sections={})'.format(self.used_volume, self.sections)
+
+    def __len__(self):
+        return len(self.sections)
 
     @property
     def volume_2d(self):
