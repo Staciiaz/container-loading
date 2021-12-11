@@ -18,7 +18,11 @@ class Processor:
         return self.__sections
 
     def update(self, boxes):
-        self.__boxes.update(boxes)
+        filtered_boxes = {k: v for k, v in boxes.items() if v > 0}
+        for box_type, box_amount in filtered_boxes.items():
+            if box_type not in self.__boxes:
+                self.__boxes[box_type] = 0
+            self.__boxes[box_type] += box_amount
 
     def clear(self):
         self.__boxes.clear()
@@ -30,6 +34,11 @@ class Processor:
         if self.__boxes[box_type] <= 0:
             self.__boxes.pop(box_type)
         return box_type in self.__boxes
+
+    def clear_section(self):
+        for section in self.__sections:
+            self.update(section.used_boxes)
+        self.__sections.clear()
 
     def calculate_stacking(self):
         for stacking in Stacking.get_all():
@@ -80,4 +89,5 @@ class Processor:
         self.calculate_stacking()
         self.calculate_section()
         containers = self.calculate_container(large_container=large_container)
-        return self.remaining_boxes, self.remaining_sections, containers
+        self.clear_section()
+        return self.remaining_boxes, containers

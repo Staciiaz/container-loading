@@ -2,32 +2,42 @@ from box import Box
 from stacking import Stacking
 from container import ContainerSection
 from processor import Processor
-import os
+import socket
+import json
 
 
-def read_input(file_name):
-    data_dict = dict()
-    if os.path.exists(file_name):
-        with open(file_name, 'r') as file:
-            for line in file:
-                data = line.replace('\n', '').split(' ')
-                data_dict[data[0]] = int(data[1])
-    return data_dict
+def compute(box_array):
+    boxes = dict(zip(Box.get_types(), box_array))
+    processor = Processor()
+    remaining_boxes, containers = processor.calculate(boxes, large_container=True)
+    return {
+        'containers': [x.to_dict() for x in containers],
+        'remaining_boxes': remaining_boxes
+    }
 
 
 def main():
     Box.initialize()
     Stacking.initialize()
-    input_boxes = read_input('data/input_boxes.txt')
-    input_containers = read_input('data/input_containers.txt')
-    processor = Processor()
-    print('Input Boxes:', input_boxes)
-    remaining_boxes, remaining_sections, containers = processor.calculate(input_boxes, large_container=True)
-    print('Remaining boxes:', remaining_boxes)
-    print('Remaining sections:', len(remaining_sections))
-    print('Container amount:', len(containers))
-    for i, container in enumerate(containers):
-        print('Container', i, '=>', container.representation)
+    port = 8200
+    server = socket.socket()
+    print('Socket created')
+    server.bind(('', port))
+    print('Socket bind to port {}'.format(port))
+    server.listen(5)
+    print('Socket is listening')
+    while True:
+        client, address = server.accept()
+        print('Got connection from {}'.format(address))
+        print('Waiting for client to send data')
+        receive_data = client.recv(1024)
+        boxes = json.loads(receive_data.decode())
+        print('Computing data ...')
+        computed_data = compute(boxes)
+        json_encode_data = json.dumps(computed_data)
+        client.send(len(json_encode_data).to_bytes(4, 'big'))
+        client.send(json_encode_data.encode())
+        print('Sending computed data to client')
 
 
 if __name__ == '__main__':

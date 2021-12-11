@@ -33,14 +33,18 @@ class Box:
         return Box.box_types.get(box_type, None)
 
     @staticmethod
+    def get_types():
+        return Box.box_types.keys()
+
+    @staticmethod
     def initialize():
         Box.register({
+            'HU': [112, 76, 109],
+            'U': [112, 76, 73],
+            'MU': [112, 76, 54],
             '2HUL': [110, 180, 109],
             '2UL': [110, 180, 73],
             'WUL01': [222, 151.5, 85],
             'WUL03': [222, 151.5, 73],
-            'HU': [112, 76, 109],
-            'U': [112, 76, 73],
-            'MU': [112, 76, 54],
             'etc': [110, 150, 150]
         })

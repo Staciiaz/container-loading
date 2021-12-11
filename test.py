@@ -1,19 +1,41 @@
-import math
+from box import Box
+from stacking import Stacking
+from container import ContainerSection
+from processor import Processor
+from util import read_input
+import socket
+import json
+
+
+def compute(boxes):
+    processor = Processor()
+    print('Input Boxes:', boxes)
+    remaining_boxes, remaining_sections, containers = processor.calculate(boxes, large_container=True)
+    print('Remaining boxes:', remaining_boxes)
+    print('Remaining sections:', len(remaining_sections))
+    print('Container amount:', len(containers))
+    for i, container in enumerate(containers):
+        print('Container', i, '=>', container.representation)
 
 
 def test():
-    data = [3, 5, 10, 8, 4]
-    sum_score = 0
-    n = sum(data)
-    for i, d in enumerate(data):
-        sum_score += (i + 1) * d
-    mean_score = sum_score / n
-    sum_std_dev = 0
-    for i, d in enumerate(data):
-        sum_std_dev += math.pow((i + 1) - mean_score, 2) * d
-    std_dev = math.sqrt(sum_std_dev / (n - 1))
-    print('Mean: {0:.4f}'.format(mean_score))
-    print('Std. Dev: {0:.4f}'.format(std_dev))
+    # Box.initialize()
+    # Stacking.initialize()
+    # input_boxes = read_input('data/input_boxes.txt')
+    # compute(input_boxes)
+    server = socket.socket()
+    server.connect(('127.0.0.1', 8200))
+    print('Connected to server')
+    boxes = [20, 30, 30, 10, 30, 15, 30, 15]
+    server.send(json.dumps(boxes).encode())
+    print('Sending boxes to server')
+    print('Waiting for server to response')
+    byte_length = server.recv(1024)
+    response_data = server.recv(int.from_bytes(byte_length, 'big'))
+    result = json.loads(response_data.decode())
+    print(result)
+    server.close()
+    print('Disconnected')
 
 
 if __name__ == '__main__':

@@ -5,6 +5,14 @@ class ContainerSection:
         self.used_volume = 0
         self.length = None
 
+    def to_dict(self):
+        return {
+            'volume': self.volume,
+            'used_volume': self.used_volume,
+            'length': self.length,
+            'stacking_list': [x.type_id for x in self.stacking_list]
+        }
+
     def __str__(self):
         stacking_list = [x.type_id for x in self.stacking_list]
         return '[{0}]'.format(' '.join(stacking_list))
@@ -69,6 +77,14 @@ class Container:
         self.height_limit = height_limit
         self.sections = []
         self.used_volume = 0
+
+    def to_dict(self):
+        return {
+            'volume': self.volume,
+            'used_volume': self.used_volume,
+            'height': self.height_limit,
+            'sections': [x.to_dict() for x in self.sections]
+        }
 
     def __str__(self):
         return '{}'.format(self.sections)
