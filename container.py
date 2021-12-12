@@ -7,8 +7,7 @@ class ContainerSection:
 
     def to_dict(self):
         return {
-            'volume': self.volume,
-            'used_volume': self.used_volume,
+            'width': self.used_volume,
             'length': self.length,
             'stacking_list': [x.type_id for x in self.stacking_list]
         }
@@ -80,9 +79,7 @@ class Container:
 
     def to_dict(self):
         return {
-            'volume': self.volume,
-            'used_volume': self.used_volume,
-            'height': self.height_limit,
+            'used_volume': self.used_volume_2d_ratio,
             'sections': [x.to_dict() for x in self.sections]
         }
 
