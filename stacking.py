@@ -7,37 +7,29 @@ import numpy as np
 class Stacking:
     stacking_types = dict()
 
-    def __init__(self, type_id, stacking_list):
+    def __init__(self, type_id, boxes):
         self.type_id = type_id
-        self.__stacking_list = stacking_list
-        self.__boxes = self.__count_boxes()
-        self.__size = self.__calculate_size()
+        self.boxes = boxes
+        self.used_boxes = self.__count_boxes()
+        self.size = self.__calculate_size()
 
     def __repr__(self):
         return '(type_id={0}, volume={1})'.format(self.type_id, self.volume)
 
     def __count_boxes(self):
-        counter = Counter(reduce(lambda a, b: a + b, [reduce(lambda x, y: x + y, z.tolist()) for z in self.__stacking_list]))
+        counter = Counter(reduce(lambda a, b: a + b, [reduce(lambda x, y: x + y, z.tolist()) for z in self.boxes]))
         return dict(counter)
 
     def __calculate_size(self):
         size = np.zeros((3,))
-        size[0] = sum([Box.get(box_type).width for box_type in self.__stacking_list[0][0]])
-        size[1] = sum([Box.get(box_type).length for box_type in [x[0] for x in self.__stacking_list[0]]])
-        size[2] = sum([max([Box.get(box_type).height for box_type in reduce(lambda x, y: x + y, stacking.tolist())]) for stacking in self.__stacking_list])
+        size[0] = sum([Box.get(box_type).width for box_type in self.boxes[0][0]])
+        size[1] = sum([Box.get(box_type).length for box_type in [x[0] for x in self.boxes[0]]])
+        size[2] = sum([max([Box.get(box_type).height for box_type in reduce(lambda x, y: x + y, stacking.tolist())]) for stacking in self.boxes])
         return size
 
     @property
     def is_same_type(self):
         return len(self.boxes) == 1
-
-    @property
-    def size(self):
-        return self.__size
-
-    @property
-    def boxes(self):
-        return self.__boxes
 
     @property
     def width(self):

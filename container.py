@@ -1,3 +1,6 @@
+from stacking import Stacking
+
+
 class ContainerSection:
     def __init__(self, volume):
         self.volume = volume
@@ -7,10 +10,19 @@ class ContainerSection:
 
     def to_dict(self):
         return {
-            'width': self.used_volume,
+            'volume': self.volume,
+            'used_volume': self.used_volume,
             'length': self.length,
             'stacking_list': [x.type_id for x in self.stacking_list]
         }
+
+    @staticmethod
+    def from_dict(data):
+        section = ContainerSection(data['volume'])
+        section.length = data['length']
+        section.used_volume = data['used_volume']
+        section.stacking_list.extend([Stacking.get(x) for x in data['stacking_list']])
+        return section
 
     def __str__(self):
         stacking_list = [x.type_id for x in self.stacking_list]
@@ -51,7 +63,7 @@ class ContainerSection:
     def used_boxes(self):
         used_boxes = dict()
         for stacking in self.stacking_list:
-            for box_type, box_amount in stacking.boxes.items():
+            for box_type, box_amount in stacking.used_boxes.items():
                 if box_type not in used_boxes:
                     used_boxes[box_type] = 0
                 used_boxes[box_type] += box_amount
@@ -79,9 +91,18 @@ class Container:
 
     def to_dict(self):
         return {
-            'used_volume': self.used_volume_2d_ratio,
+            'volume': self.volume,
+            'used_volume': self.used_volume,
+            'height_limit': self.height_limit,
             'sections': [x.to_dict() for x in self.sections]
         }
+
+    @staticmethod
+    def from_dict(data):
+        container = Container(data['volume'], data['height_limit'])
+        container.used_volume = data['used_volume']
+        container.sections.extend([ContainerSection.from_dict(x) for x in data['sections']])
+        return container
 
     def __str__(self):
         return '{}'.format(self.sections)

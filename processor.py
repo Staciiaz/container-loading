@@ -42,11 +42,11 @@ class Processor:
 
     def calculate_stacking(self):
         for stacking in Stacking.get_all():
-            if min([0 if x not in self.__boxes else self.__boxes[x] for x in stacking.boxes]) > 0:
-                stacking_amount = min([self.__boxes[x] // stacking.boxes[x] for x in stacking.boxes])
+            if min([0 if x not in self.__boxes else self.__boxes[x] for x in stacking.used_boxes]) > 0:
+                stacking_amount = min([self.__boxes[x] // stacking.used_boxes[x] for x in stacking.used_boxes])
                 if stacking_amount > 0:
                     self.__stacking[stacking.type_id] = stacking_amount
-                    [self.remove_boxes(x, stacking_amount * stacking.boxes[x]) for x in stacking.boxes]
+                    [self.remove_boxes(x, stacking_amount * stacking.used_boxes[x]) for x in stacking.used_boxes]
         return self.__stacking
 
     def calculate_section(self):
